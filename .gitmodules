@@ -1,0 +1,3 @@
+[submodule "opensprinkler"]
+	path = opensprinkler
+	url = https://github.com/jloosli/opensprinkler.git
