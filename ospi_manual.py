@@ -27,21 +27,21 @@ values = [0]*num_stations
 
 def enableShiftRegisterOutput():
     with pin_sr_noe:
-    	pin_sr_noe.value = False
+        pin_sr_noe.value = False
 
 def disableShiftRegisterOutput():
     with pin_sr_noe:
-	pin_sr_noe.value = True
+        pin_sr_noe.value = True
 
 def setShiftRegister(values):
     with pin_sr_clk, pin_sr_lat, pin_sr_clk, pin_sr_dat:
-	pin_sr_clk.value = False
-    	pin_sr_lat.value = False
-	for s in range(num_stations):
+        pin_sr_clk.value = False
+        pin_sr_lat.value = False
+    for s in range(num_stations):
             pin_sr_clk.value = False
             pin_sr_dat.value = values[num_stations-1-s]
             pin_sr_clk.value = True
-    	pin_sr_lat.value = True
+        pin_sr_lat.value = True
 
 #Create custom HTTPRequestHandler class
 class KodeFunHTTPRequestHandler(BaseHTTPRequestHandler):
