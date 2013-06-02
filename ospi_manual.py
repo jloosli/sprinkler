@@ -37,7 +37,7 @@ def setShiftRegister(values):
     with pin_sr_clk, pin_sr_lat, pin_sr_clk, pin_sr_dat:
         pin_sr_clk.value = False
         pin_sr_lat.value = False
-    for s in range(num_stations):
+        for s in range(num_stations):
             pin_sr_clk.value = False
             pin_sr_dat.value = values[num_stations-1-s]
             pin_sr_clk.value = True
