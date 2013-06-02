@@ -14,10 +14,10 @@ pin_sr_noe = 17
 pin_sr_dat = 21 # NOTE: if you have a RPi rev.2, need to change this to 27
 pin_sr_lat = 22
 
-pin_sr_clk = pins.pin(4, Out)
-pin_sr_noe = pins.pin(17, Out)
-pin_sr_dat = pins.pin(21, Out) # Note: if you have a RPi rev.2, need to change this to 27
-pin_sr_lat = pins.pin(22, Out)
+pin_sr_clk = pins.pin(7, Out)
+pin_sr_noe = pins.pin(11, Out)
+pin_sr_dat = pins.pin(13, Out) # Note: if you have a RPi rev.2, need to change this to 27
+pin_sr_lat = pins.pin(15, Out)
 
 # NUMBER OF STATIONS
 num_stations = 16
