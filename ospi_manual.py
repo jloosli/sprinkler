@@ -39,6 +39,7 @@ def disableShiftRegisterOutput():
 
 def setShiftRegister(values):
     print ("In set")
+    print (values)
     with pin_sr_clk, pin_sr_lat, pin_sr_clk, pin_sr_dat:
         pin_sr_clk.value = False
         pin_sr_lat.value = False
