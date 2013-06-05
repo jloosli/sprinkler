@@ -64,8 +64,8 @@ class Scheduler:
 
     def add(self, zone, start, duration):
         event = []
-        if start > time.time():
-            delta = start - time.time()
+        if start > datetime.datetime.now():
+            delta = start - datetime.datetime.now()
             print ("Turning on zone %d in %d seconds", (zone, delta))
             Timer(delta, zoneOn, args=[zone]).start()
             Timer(delta + duration, zonesOff).start()
