@@ -70,8 +70,9 @@ class Scheduler:
             print ("Turning on zone %d in %s" % (zone, str(delta)))
             event.append(threading.Timer(delta.total_seconds(), zoneOn, args=[zone]).start())
             event.append(threading.Timer((delta + duration).total_seconds(), zonesOff).start())
-            event[0].name = "Zone_%d_start"
-            event[1].name = "Zone_%d_end"
+            print(event)
+            event[0].name = "Zone_%d_start" % zone
+            event[1].name = "Zone_%d_end" % zone
         self.events.append(set(event))
 
     def run(self):
