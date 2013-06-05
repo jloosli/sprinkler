@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import urllib.parse
 import os
-from quick2wire.gpio import pins, Out
+# from quick2wire.gpio import pins, Out
 #import RPi.GPIO as GPIO
 import atexit
-import pdb
+
 
 # GPIO PIN DEFINES
 
@@ -81,7 +82,7 @@ class KodeFunHTTPRequestHandler(BaseHTTPRequestHandler):
                 self.end_headers()
 
                 #send file content to client
-                self.wfile.write(f.read())
+                self.wfile.write(bytes(f.read(), "utf-8"))
                 f.close()
                 return
             elif '/cv?' in self.path:
@@ -92,7 +93,7 @@ class KodeFunHTTPRequestHandler(BaseHTTPRequestHandler):
                 sn = int(parsed['sid'][0])
                 v  = int(parsed['v'][0])                        
                 if sn<0 or sn>(num_stations-1) or v<0 or v>1:
-                    self.wfile.write('<script>alert(\"Wrong value!\");</script>');
+                    self.wfile.write(bytes('<script>alert(\"Wrong value!\");</script>', 'utf-8'))
                 else:
                     if v==0:
                         values[sn] = 0
@@ -100,19 +101,19 @@ class KodeFunHTTPRequestHandler(BaseHTTPRequestHandler):
                         values[sn] = 1
                     self.Comm.setShiftRegister(values)
 
-                self.wfile.write('<script>window.location=\".\";</script>')
+                self.wfile.write(bytes('<script>window.location=\".\";</script>', 'utf-8'))
             else:
                 self.send_response(200)
                 self.send_header('Content-type','text/html')
                 self.end_headers()
-                self.wfile.write('<script>\nvar nstations=')
-                self.wfile.write(num_stations)
-                self.wfile.write(', values=[')
+                self.wfile.write(bytes("<script>\nvar nstations=", "utf-8"))
+                self.wfile.write(bytes(str(num_stations), "utf-8"))
+                self.wfile.write(bytes(', values=[', "utf-8"))
                 for s in range(0,num_stations):
-                    self.wfile.write(values[s])
-                    self.wfile.write(',')
-                self.wfile.write('0];\n</script>\n')
-                self.wfile.write('<script src=\'manual.js\'></script>')
+                    self.wfile.write(bytes(str(values[s]), "utf-8"))
+                    self.wfile.write(bytes(',', "utf-8"))
+                self.wfile.write(bytes('0];\n</script>\n', "utf-8"))
+                self.wfile.write(bytes('<script src=\'manual.js\'></script>', 'utf-8'))
 
         except IOError:
             self.send_error(404, 'file not found')
