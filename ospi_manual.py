@@ -26,57 +26,47 @@ num_stations = 16
 # STATION BITS 
 values = [0]*num_stations
 
-class StationComm:
-    def __init__(self):
-        self.pin_sr_clk = pins.pin(0, Out)
-        self.pin_sr_noe = pins.pin(1, Out)
-        self.pin_sr_dat = pins.pin(3, Out) # Note: if you have a RPi rev.2, need to change this to 27
-        self.pin_sr_lat = pins.pin(4, Out)
+pin_sr_clk = pins.pin(0, Out)
+pin_sr_noe = pins.pin(1, Out)
+pin_sr_dat = pins.pin(3, Out) # Note: if you have a RPi rev.2, need to change this to 27
+pin_sr_lat = pins.pin(4, Out)
 
-        self.pin_sr_clk.open()
-        self.pin_sr_lat.open()
-        self.pin_sr_noe.open()
-        self.pin_sr_dat.open()
+pin_sr_clk.open()
+pin_sr_lat.open()
+pin_sr_noe.open()
+pin_sr_dat.open()
 
-        self.disableShiftRegisterOutput()
-        setShiftRegister(values)
-        enableShiftRegisterOutput()
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, type, value, traceback):
-        self.pin_sr_clk.close()
-        self.pin_sr_lat.close()
-        self.pin_sr_noe.close()
-        self.pin_sr_dat.close()
+disableShiftRegisterOutput()
+setShiftRegister(values)
+enableShiftRegisterOutput()
 
 
 
 
-    def enableShiftRegisterOutput(self):
-        pin_sr_noe.value = 0
 
-    def disableShiftRegisterOutput(self):
-        self.pin_sr_noe.value = 1
+def enableShiftRegisterOutput(self):
+    pin_sr_noe.value = 0
 
-    def setShiftRegister(self, values):
-        print ("In set")
-        print (values)
-        
+def disableShiftRegisterOutput(self):
+    self.pin_sr_noe.value = 1
+
+def setShiftRegister(self, values):
+    print ("In set")
+    print (values)
+    
+    self.pin_sr_clk.value = False
+    self.pin_sr_lat.value = False
+    for s in range(num_stations):
         self.pin_sr_clk.value = False
-        self.pin_sr_lat.value = False
-        for s in range(num_stations):
-            self.pin_sr_clk.value = False
-            self.pin_sr_dat.value = values[num_stations-1-s]
-            self.pin_sr_clk.value = True
-        self.pin_sr_lat.value = True
+        self.pin_sr_dat.value = values[num_stations-1-s]
+        self.pin_sr_clk.value = True
+    self.pin_sr_lat.value = True
 
 #Create custom HTTPRequestHandler class
 class KodeFunHTTPRequestHandler(BaseHTTPRequestHandler):
 
-    def __init__(self):
-        self.Comm = StationComm()
+    # def __init__(self):
+    #     self.Comm = StationComm()
     
     #handle GET command
     def do_GET(self):
@@ -155,7 +145,11 @@ def progexit():
     global values
     values = [0]*num_stations
     setShiftRegister(values)
-    #GPIO.cleanup()
+    pin_sr_clk.close()
+    pin_sr_lat.close()
+    pin_sr_noe.close()
+    pin_sr_dat.close()
+
 
 if __name__ == '__main__':
     atexit.register(progexit)
