@@ -6,6 +6,7 @@ import os
 from quick2wire.gpio import pins, Out
 #import RPi.GPIO as GPIO
 import atexit
+import pdb
 
 # GPIO PIN DEFINES
 
@@ -30,12 +31,14 @@ num_stations = 16
 values = [0]*num_stations
 
 def enableShiftRegisterOutput():
-    with pin_sr_noe:
-        pin_sr_noe.value = False
+    pin_sr_noe.open()
+    pin_sr_noe.value = 0
+    pin_sr_noe.close()
 
 def disableShiftRegisterOutput():
-    with pin_sr_noe:
-        pin_sr_noe.value = True
+    pin_sr_noe.open()
+    pin_sr_noe.value = 1
+    pin_sr_noe.close()
 
 def setShiftRegister(values):
     print ("In set")
