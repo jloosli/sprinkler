@@ -5,21 +5,10 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import urllib.parse
 import os
 from quick2wire.gpio import pins, Out
-#import RPi.GPIO as GPIO
 import atexit
 
 
-# GPIO PIN DEFINES
-
-# pin_sr_clk =  4
-# pin_sr_noe = 17
-# pin_sr_dat = 21 # NOTE: if you have a RPi rev.2, need to change this to 27
-# pin_sr_lat = 22
-
-# pin_sr_clk = pins.pin(4, Out) 7
-# pin_sr_noe = pins.pin(17, Out) 0
-# pin_sr_dat = pins.pin(21, Out) 2 # Note: if you have a RPi rev.2, need to change this to 27
-# pin_sr_lat = pins.pin(22, Out) 3
+# GPIO PIN DEFINES (using quick2wire GPIO numbers)
 
 # NUMBER OF STATIONS
 num_stations = 16
@@ -27,10 +16,10 @@ num_stations = 16
 # STATION BITS 
 values = [0]*num_stations
 
-pin_sr_clk = pins.pin(7, Out)
-pin_sr_noe = pins.pin(0, Out)
-pin_sr_dat = pins.pin(2, Out) # Note: if you have a RPi rev.2, need to change this to 27
-pin_sr_lat = pins.pin(3, Out)
+pin_sr_clk = pins.pin(7, Out) # Pin 7 (GPIO 4)
+pin_sr_noe = pins.pin(0, Out) # Pin 11 (GPIO 17)
+pin_sr_dat = pins.pin(2, Out) # Pin 13 (GPIO 21) # May need to be changed with rev.2 board
+pin_sr_lat = pins.pin(3, Out) # Pin 15 (GPIO 22)
 
 pin_sr_clk.open()
 pin_sr_lat.open()
