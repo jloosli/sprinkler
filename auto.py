@@ -61,6 +61,7 @@ class Scheduler:
         self.s = sched.scheduler(time.time, time.sleep)
 
     def add(self, zone, start, duration):
+        print (zone, start, duration)
         event = []
         event.append(self.s.enterabs(start, 1, zoneOn, argument=(zone,)))
         event.append(self.s.enterabs(start + duration, 1, zonesOff, argument=()))
@@ -133,7 +134,7 @@ def run():
     enableShiftRegisterOutput()
 
     s=Scheduler()
-    s.add(time.time() + 10, 30, 0)
+    s.add(0, time.time() + 10, 30)
     s.run()
 
 
