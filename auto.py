@@ -145,11 +145,11 @@ def run():
 
     #ip and port of servr
     #by default http server port is 8080
-    server_address = ('', 8080)
-    httpd = HTTPServer(server_address, KodeFunHTTPRequestHandler)
-    print('OpenSprinkler Pi is running...')
-    while True:
-        httpd.handle_request()
+    # server_address = ('', 8080)
+    # httpd = HTTPServer(server_address, KodeFunHTTPRequestHandler)
+    # print('OpenSprinkler Pi is running...')
+    # while True:
+    #     httpd.handle_request()
 
 def progexit():
     global values
