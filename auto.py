@@ -162,7 +162,7 @@ def run():
     while threading.active_count() > 1:
         print ("Current threading:")
         for thread in threading.enumerate():
-            print thread
+            print (thread)
         time.sleep(600)
 
 
