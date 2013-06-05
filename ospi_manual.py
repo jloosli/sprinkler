@@ -16,10 +16,10 @@ import atexit
 # pin_sr_dat = 21 # NOTE: if you have a RPi rev.2, need to change this to 27
 # pin_sr_lat = 22
 
-# pin_sr_clk = pins.pin(4, Out)
-# pin_sr_noe = pins.pin(17, Out)
-# pin_sr_dat = pins.pin(21, Out) # Note: if you have a RPi rev.2, need to change this to 27
-# pin_sr_lat = pins.pin(22, Out)
+# pin_sr_clk = pins.pin(4, Out) 7
+# pin_sr_noe = pins.pin(17, Out) 0
+# pin_sr_dat = pins.pin(21, Out) 2 # Note: if you have a RPi rev.2, need to change this to 27
+# pin_sr_lat = pins.pin(22, Out) 3
 
 # NUMBER OF STATIONS
 num_stations = 16
@@ -27,10 +27,10 @@ num_stations = 16
 # STATION BITS 
 values = [0]*num_stations
 
-pin_sr_clk = pins.pin(0, Out)
-pin_sr_noe = pins.pin(1, Out)
-pin_sr_dat = pins.pin(3, Out) # Note: if you have a RPi rev.2, need to change this to 27
-pin_sr_lat = pins.pin(4, Out)
+pin_sr_clk = pins.pin(7, Out)
+pin_sr_noe = pins.pin(0, Out)
+pin_sr_dat = pins.pin(2, Out) # Note: if you have a RPi rev.2, need to change this to 27
+pin_sr_lat = pins.pin(3, Out)
 
 pin_sr_clk.open()
 pin_sr_lat.open()
