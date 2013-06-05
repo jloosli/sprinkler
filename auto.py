@@ -146,7 +146,7 @@ def run():
     enableShiftRegisterOutput()
 
     #start at 7 am
-    startTime = datetime.time(2,59)
+    startTime = datetime.time(7)
     nextStart = datetime.datetime.combine(datetime.date.today(),startTime)
     if nextStart < datetime.datetime.now():
         nextStart = nextStart + datetime.timedelta(days=1)
