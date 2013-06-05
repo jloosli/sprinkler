@@ -68,13 +68,14 @@ class Scheduler:
             delta = start - datetime.datetime.now()
             # duration = datetime.timedelta(duration)
             print ("Turning on zone %d in %s" % (zone, str(delta)))
-            Timer(delta.total_seconds(), zoneOn, args=[zone]).start()
-            Timer((delta + duration).total_seconds(), zonesOff).start()
-        return set(event)
+            event.append(Timer(delta.total_seconds(), zoneOn, args=[zone]).start())
+            event.append(Timer((delta + duration).total_seconds(), zonesOff).start())
+        self.events.append(set(event))
 
     def run(self):
         # print ["\n".split(x) for x in self.s.queue]
-        self.s.run()
+        # self.s.run()
+
 
 
 
@@ -153,6 +154,7 @@ def run():
     s.add(2, nextStart+gap*2, gap)
     s.add(3, nextStart+gap*3, gap/5*2)
     # s.run()
+    print ([x for x in threading.enumerate()])
 
 
 
