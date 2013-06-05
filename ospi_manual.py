@@ -26,11 +26,6 @@ pin_sr_lat.open()
 pin_sr_noe.open()
 pin_sr_dat.open()
 
-
-
-
-
-
 def enableShiftRegisterOutput():
     pin_sr_noe.value = 0
 
@@ -38,9 +33,6 @@ def disableShiftRegisterOutput():
     pin_sr_noe.value = 1
 
 def setShiftRegister(values):
-    print ("In set")
-    print (values)
-    
     pin_sr_clk.value = False
     pin_sr_lat.value = False
     for s in range(num_stations):
@@ -105,22 +97,9 @@ class KodeFunHTTPRequestHandler(BaseHTTPRequestHandler):
             self.send_error(404, 'file not found')
     
 def run():
-    #GPIO.cleanup()
-    # setup GPIO pins to interface with shift register
-    # GPIO.setmode(GPIO.BCM)
-    # GPIO.setup(pin_sr_clk, GPIO.OUT)
-    # GPIO.setup(pin_sr_noe, GPIO.OUT)
-    # disableShiftRegisterOutput()
-    # GPIO.setup(pin_sr_dat, GPIO.OUT)
-    # GPIO.setup(pin_sr_lat, GPIO.OUT)
-
     disableShiftRegisterOutput()
     setShiftRegister(values)
     enableShiftRegisterOutput()
-
-
-    # setShiftRegister(values)
-    # enableShiftRegisterOutput()
 
     #ip and port of servr
     #by default http server port is 8080
