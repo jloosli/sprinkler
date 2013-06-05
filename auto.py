@@ -58,17 +58,18 @@ def zonesOff():
 
 class Scheduler:
 
-    # def __init__(self):
-    #     self.s = sched.scheduler(time.time, time.sleep)
+    def __init__(self):
+        # self.s = sched.scheduler(time.time, time.sleep)
+        self.events=[]
 
     def add(self, zone, start, duration):
         print (zone, start, duration)
         event = []
         if start > time.time():
             delta = start - time.time()
-            Timer(delta, 1, zoneOn, args=[zone]).start()
+            event.append(Timer(delta, 1, zoneOn, args=[zone]).start())
             Timer(delta + duration, 1, zonesOff).start()
-        return event
+        return set(event)
 
     def run(self):
         # print ["\n".split(x) for x in self.s.queue]
