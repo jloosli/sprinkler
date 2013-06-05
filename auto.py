@@ -63,10 +63,10 @@ class Scheduler:
         self.events=[]
 
     def add(self, zone, start, duration):
-        print (zone, start, duration)
         event = []
         if start > time.time():
             delta = start - time.time()
+            print ("Turning on zone %d in %d seconds", (zone, delta))
             Timer(delta, zoneOn, args=[zone]).start()
             Timer(delta + duration, zonesOff).start()
         return set(event)
@@ -137,8 +137,17 @@ def run():
     setShiftRegister(values)
     enableShiftRegisterOutput()
 
+    #start at 7 am
+    startTime = datetime.time(7)
+    nextStart = datetime.combine(datetime.date.now(),startTime)
+    if nextStart < datetime.datetime.now():
+        nextStart = nextStart + datetime.timedelta(days=1)
+
     s=Scheduler()
-    s.add(1, time.time() + 2, 30)
+    s.add(0, nextStart, 300)
+    s.add(1, nextStart+300, 300)
+    s.add(2, nextStart+600, 300)
+    s.add(3, nextStart+900, 120)
     # s.run()
 
 
