@@ -36,9 +36,6 @@ pin_sr_lat.open()
 pin_sr_noe.open()
 pin_sr_dat.open()
 
-disableShiftRegisterOutput()
-setShiftRegister(values)
-enableShiftRegisterOutput()
 
 
 
@@ -129,6 +126,11 @@ def run():
     # disableShiftRegisterOutput()
     # GPIO.setup(pin_sr_dat, GPIO.OUT)
     # GPIO.setup(pin_sr_lat, GPIO.OUT)
+
+    disableShiftRegisterOutput()
+    setShiftRegister(values)
+    enableShiftRegisterOutput()
+
 
     # setShiftRegister(values)
     # enableShiftRegisterOutput()
