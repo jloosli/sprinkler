@@ -153,7 +153,7 @@ def run():
 
     print ("Next start is %s" % nextStart)
 
-    gap = datetime.timedelta(minutes=1)
+    gap = datetime.timedelta(minutes=5)
     s=Scheduler()
     s.add(0, nextStart, gap)
     s.add(1, nextStart+gap, gap)
@@ -162,8 +162,8 @@ def run():
     # s.run()
     while threading.active_count() > 1:
         print ("Current threading:")
-        print ([x for x in threading.enumerate()])
-        time.sleep(10)
+        print ([str(x) + "\n" for x in threading.enumerate()])
+        time.sleep(600)
 
 
 
