@@ -29,7 +29,7 @@ num_stations = 16
 
 # STATION BITS 
 values = [0]*num_stations
-with pin_sr_clk, pin_sr_lat, pin_sr_clk, pin_sr_dat:
+with pin_sr_clk, pin_sr_lat, pin_sr_noe, pin_sr_dat:
     def enableShiftRegisterOutput():
         pin_sr_noe.value = 0
 
