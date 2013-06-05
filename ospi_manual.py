@@ -41,23 +41,23 @@ pin_sr_dat.open()
 
 
 
-def enableShiftRegisterOutput(self):
+def enableShiftRegisterOutput():
     pin_sr_noe.value = 0
 
-def disableShiftRegisterOutput(self):
-    self.pin_sr_noe.value = 1
+def disableShiftRegisterOutput():
+    pin_sr_noe.value = 1
 
-def setShiftRegister(self, values):
+def setShiftRegister(values):
     print ("In set")
     print (values)
     
-    self.pin_sr_clk.value = False
-    self.pin_sr_lat.value = False
+    pin_sr_clk.value = False
+    pin_sr_lat.value = False
     for s in range(num_stations):
-        self.pin_sr_clk.value = False
-        self.pin_sr_dat.value = values[num_stations-1-s]
-        self.pin_sr_clk.value = True
-    self.pin_sr_lat.value = True
+        pin_sr_clk.value = False
+        pin_sr_dat.value = values[num_stations-1-s]
+        pin_sr_clk.value = True
+    pin_sr_lat.value = True
 
 #Create custom HTTPRequestHandler class
 class KodeFunHTTPRequestHandler(BaseHTTPRequestHandler):
