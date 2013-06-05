@@ -66,6 +66,10 @@ class Scheduler:
         event.append(self.s.enterabs(start + duration, 1, zonesOff, argument=()))
         return event
 
+    def run(self):
+        print (self.s.queue)
+        self.s.run()
+
 
 
 #Create custom HTTPRequestHandler class
@@ -130,6 +134,7 @@ def run():
 
     s=Scheduler()
     s.add(time.time() + 10, 30, 0)
+    s.run()
 
 
 
