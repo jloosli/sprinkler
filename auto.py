@@ -66,7 +66,7 @@ class Scheduler:
         event = []
         if start > time.time():
             delta = start - time.time()
-            Timer(delta, 1, zoneOn, args=(zone,)).start()
+            Timer(delta, 1, zoneOn, args=[zone]).start()
             Timer(delta + duration, 1, zonesOff).start()
         return event
 
