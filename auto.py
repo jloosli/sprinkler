@@ -68,7 +68,7 @@ class Scheduler:
         return event
 
     def run(self):
-        print (self.s.queue)
+        print ["\n".split(x) for x in self.s.queue]
         self.s.run()
 
 
