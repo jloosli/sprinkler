@@ -139,7 +139,7 @@ def run():
 
     #start at 7 am
     startTime = datetime.time(7)
-    nextStart = datetime.combine(datetime.date.now(),startTime)
+    nextStart = datetime.datetime.combine(datetime.date.now(),startTime)
     if nextStart < datetime.datetime.now():
         nextStart = nextStart + datetime.timedelta(days=1)
 
