@@ -141,21 +141,24 @@ def run():
     enableShiftRegisterOutput()
 
     #start at 7 am
-    startTime = datetime.time(7)
+    startTime = datetime.time(2,57)
     nextStart = datetime.datetime.combine(datetime.date.today(),startTime)
     if nextStart < datetime.datetime.now():
         nextStart = nextStart + datetime.timedelta(days=1)
 
     print ("Next start is %s" % nextStart)
 
-    gap = datetime.timedelta(minutes=5)
+    gap = datetime.timedelta(minutes=1)
     s=Scheduler()
     s.add(0, nextStart, gap)
     s.add(1, nextStart+gap, gap)
     s.add(2, nextStart+gap*2, gap)
     s.add(3, nextStart+gap*3, gap/5*2)
     # s.run()
-    print ([x for x in threading.enumerate()])
+    while threading.active_count > 1:
+        print ("Current threading:")
+        print ([x for x in threading.enumerate()])
+        time.sleep(10)
 
 
 
