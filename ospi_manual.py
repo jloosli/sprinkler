@@ -40,13 +40,13 @@ with pin_sr_clk, pin_sr_lat, pin_sr_clk, pin_sr_dat:
         print ("In set")
         print (values)
         
+        pin_sr_clk.value = False
+        pin_sr_lat.value = False
+        for s in range(num_stations):
             pin_sr_clk.value = False
-            pin_sr_lat.value = False
-            for s in range(num_stations):
-                pin_sr_clk.value = False
-                pin_sr_dat.value = values[num_stations-1-s]
-                pin_sr_clk.value = True
-            pin_sr_lat.value = True
+            pin_sr_dat.value = values[num_stations-1-s]
+            pin_sr_clk.value = True
+        pin_sr_lat.value = True
 
 #Create custom HTTPRequestHandler class
 class KodeFunHTTPRequestHandler(BaseHTTPRequestHandler):
