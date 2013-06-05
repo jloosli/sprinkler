@@ -66,8 +66,8 @@ class Scheduler:
         event = []
         if start > time.time():
             delta = start - time.time()
-            Timer(delta, 1, zoneOn, args=[zone]).start()
-            Timer(delta + duration, 1, zonesOff).start()
+            Timer(delta, zoneOn, args=[zone]).start()
+            Timer(delta + duration, zonesOff).start()
         return event
 
     def run(self):
@@ -137,7 +137,7 @@ def run():
     enableShiftRegisterOutput()
 
     s=Scheduler()
-    s.add(0, time.time() + 10, 30)
+    s.add(1, time.time() + 2, 30)
     # s.run()
 
 
