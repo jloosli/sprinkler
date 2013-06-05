@@ -4,7 +4,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import urllib.parse
 import os
-# from quick2wire.gpio import pins, Out
+from quick2wire.gpio import pins, Out
 #import RPi.GPIO as GPIO
 import atexit
 
