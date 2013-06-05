@@ -29,28 +29,24 @@ num_stations = 16
 
 # STATION BITS 
 values = [0]*num_stations
+with pin_sr_clk, pin_sr_lat, pin_sr_clk, pin_sr_dat:
+    def enableShiftRegisterOutput():
+        pin_sr_noe.value = 0
 
-def enableShiftRegisterOutput():
-    pin_sr_noe.open()
-    pin_sr_noe.value = 0
-    pin_sr_noe.close()
+    def disableShiftRegisterOutput():
+        pin_sr_noe.value = 1
 
-def disableShiftRegisterOutput():
-    pin_sr_noe.open()
-    pin_sr_noe.value = 1
-    pin_sr_noe.close()
-
-def setShiftRegister(values):
-    print ("In set")
-    print (values)
-    with pin_sr_clk, pin_sr_lat, pin_sr_clk, pin_sr_dat:
-        pin_sr_clk.value = False
-        pin_sr_lat.value = False
-        for s in range(num_stations):
+    def setShiftRegister(values):
+        print ("In set")
+        print (values)
+        
             pin_sr_clk.value = False
-            pin_sr_dat.value = values[num_stations-1-s]
-            pin_sr_clk.value = True
-        pin_sr_lat.value = True
+            pin_sr_lat.value = False
+            for s in range(num_stations):
+                pin_sr_clk.value = False
+                pin_sr_dat.value = values[num_stations-1-s]
+                pin_sr_clk.value = True
+            pin_sr_lat.value = True
 
 #Create custom HTTPRequestHandler class
 class KodeFunHTTPRequestHandler(BaseHTTPRequestHandler):
