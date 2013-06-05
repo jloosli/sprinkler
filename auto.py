@@ -62,7 +62,7 @@ class Scheduler:
 
     def add(self, zone, start, duration):
         event = []
-        event.append(self.s.enterabs(start, 1, zoneOn, argument=zone))
+        event.append(self.s.enterabs(start, 1, zoneOn, argument=(zone,)))
         event.append(self.s.enterabs(start + duration, 1, zonesOff, argument=()))
         return event
 
