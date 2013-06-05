@@ -63,9 +63,6 @@ def setShiftRegister(values):
 #Create custom HTTPRequestHandler class
 class KodeFunHTTPRequestHandler(BaseHTTPRequestHandler):
 
-    # def __init__(self):
-    #     self.Comm = StationComm()
-    
     #handle GET command
     def do_GET(self):
         global values
@@ -99,7 +96,7 @@ class KodeFunHTTPRequestHandler(BaseHTTPRequestHandler):
                         values[sn] = 0
                     else:
                         values[sn] = 1
-                    self.Comm.setShiftRegister(values)
+                    setShiftRegister(values)
 
                 self.wfile.write(bytes('<script>window.location=\".\";</script>', 'utf-8'))
             else:
