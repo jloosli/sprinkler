@@ -6,7 +6,8 @@ import urllib.parse
 import os
 from quick2wire.gpio import pins, Out
 import atexit
-import time, sched
+import time
+from threading import Timer
 
 
 # GPIO PIN DEFINES (using quick2wire GPIO numbers)
@@ -57,18 +58,20 @@ def zonesOff():
 
 class Scheduler:
 
-    def __init__(self):
-        self.s = sched.scheduler(time.time, time.sleep)
+    # def __init__(self):
+    #     self.s = sched.scheduler(time.time, time.sleep)
 
     def add(self, zone, start, duration):
         print (zone, start, duration)
         event = []
-        event.append(self.s.enterabs(start, 1, zoneOn, argument=(zone,)))
-        event.append(self.s.enterabs(start + duration, 1, zonesOff, argument=()))
+        if start > time.time():
+            delta = start - time.time()
+            Timer(delta, 1, zoneOn, args=(zone,)).start()
+            Timer(delta + duration, 1, zonesOff).start()
         return event
 
     def run(self):
-        print ["\n".split(x) for x in self.s.queue]
+        # print ["\n".split(x) for x in self.s.queue]
         self.s.run()
 
 
@@ -135,7 +138,7 @@ def run():
 
     s=Scheduler()
     s.add(0, time.time() + 10, 30)
-    s.run()
+    # s.run()
 
 
 
