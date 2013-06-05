@@ -7,7 +7,7 @@ import os
 from quick2wire.gpio import pins, Out
 import atexit
 import time, datetime
-from threading import Timer
+import threading
 
 
 # GPIO PIN DEFINES (using quick2wire GPIO numbers)
@@ -68,14 +68,14 @@ class Scheduler:
             delta = start - datetime.datetime.now()
             # duration = datetime.timedelta(duration)
             print ("Turning on zone %d in %s" % (zone, str(delta)))
-            event.append(Timer(delta.total_seconds(), zoneOn, args=[zone]).start())
-            event.append(Timer((delta + duration).total_seconds(), zonesOff).start())
+            event.append(threading.Timer(delta.total_seconds(), zoneOn, args=[zone]).start())
+            event.append(threading.Timer((delta + duration).total_seconds(), zonesOff).start())
         self.events.append(set(event))
 
     def run(self):
         # print ["\n".split(x) for x in self.s.queue]
         # self.s.run()
-        continue
+        pass
 
 
 
