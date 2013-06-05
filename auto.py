@@ -143,6 +143,8 @@ def run():
     if nextStart < datetime.datetime.now():
         nextStart = nextStart + datetime.timedelta(days=1)
 
+    print ("Next start is %s" % nextStart)
+
     s=Scheduler()
     s.add(0, nextStart, 300)
     s.add(1, nextStart+300, 300)
