@@ -52,9 +52,6 @@ def setShiftRegister(values):
 #Create custom HTTPRequestHandler class
 class KodeFunHTTPRequestHandler(BaseHTTPRequestHandler):
 
-    # def __init__(self):
-    #     self.Comm = StationComm()
-    
     #handle GET command
     def do_GET(self):
         global values
