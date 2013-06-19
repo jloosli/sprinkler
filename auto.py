@@ -82,6 +82,7 @@ class Scheduler:
             event['endThread'].name = "Zone_%d_end" % zone
             event['startThread'].start()
             event['endThread'].start()
+            self.pool.append(event)
 
     def drop(self, id):
         pass
