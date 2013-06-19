@@ -109,7 +109,7 @@ class KodeFunHTTPRequestHandler(BaseHTTPRequestHandler):
                 self.send_response(200)
 
                 #send header first
-                self.send_header('Content-type','text/html')
+                self.send_header('Content-type', 'text/html')
                 self.end_headers()
 
                 #send file content to client
@@ -156,6 +156,7 @@ def run():
 
     #start at 7 am
     startTime = datetime.time(7)
+    startTime = datetime.time(datetime.now())
     nextStart = datetime.datetime.combine(datetime.date.today(),startTime)
     if nextStart < datetime.datetime.now():
         nextStart = nextStart + datetime.timedelta(days=1)
