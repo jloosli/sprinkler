@@ -71,7 +71,7 @@ class Scheduler:
                 "id": uuid.uuid1(),
                 "zone": zone,
                 "start": start,
-                "duration": duration,
+                "finish": start + duration,
                 "status": 'queued',
                 "startThread": threading.Timer(delta.total_seconds(), zoneOn, args=[zone]),
                 "endThread": threading.Timer((delta + duration).total_seconds(), zonesOff)
@@ -85,6 +85,13 @@ class Scheduler:
 
     def drop(self, id):
         pass
+
+    def status(self):
+        for event in pool[:]:
+            if event['status'] == 'queue':
+                event['timeUntilStart'] = event['start'] - datetime.datetime.now()
+            elif event['status'] == 'started':
+                event['timeLeft'] = event['finish'] - datetime.datetime.now()
 
     def run(self):
         # print ["\n".split(x) for x in self.s.queue]
@@ -173,9 +180,10 @@ def run():
     # s.run()
     while threading.active_count() > 1:
         print ("Current threading:")
+        s.status()
         for thread in threading.enumerate():
             print (thread)
-        time.sleep(600)
+        time.sleep(10)
 
 
 
