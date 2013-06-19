@@ -87,11 +87,13 @@ class Scheduler:
         pass
 
     def status(self):
-        for event in self.pool[:]:
+        thePool = self.pool[:]
+        for event in thePool:
             if event['status'] == 'queue':
                 event['timeUntilStart'] = event['start'] - datetime.datetime.now()
             elif event['status'] == 'started':
                 event['timeLeft'] = event['finish'] - datetime.datetime.now()
+        return thePool
 
     def run(self):
         # print ["\n".split(x) for x in self.s.queue]
@@ -180,7 +182,7 @@ def run():
     # s.run()
     while threading.active_count() > 1:
         print ("Current threading:")
-        s.status()
+        print(s.status())
         for thread in threading.enumerate():
             print (thread)
         time.sleep(10)
