@@ -87,7 +87,7 @@ class Scheduler:
         pass
 
     def status(self):
-        for event in pool[:]:
+        for event in self.pool[:]:
             if event['status'] == 'queue':
                 event['timeUntilStart'] = event['start'] - datetime.datetime.now()
             elif event['status'] == 'started':
