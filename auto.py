@@ -78,10 +78,10 @@ class Scheduler:
             }
             # duration = datetime.timedelta(duration)
             print ("Turning on zone %d in %s" % (zone, str(delta)))
-            event.startThread.name = "Zone_%d_start" % zone
-            event.endThread.name = "Zone_%d_end" % zone
-            event.startThread.start()
-            event.endThread.start()
+            event['startThread'].name = "Zone_%d_start" % zone
+            event['endThread'].name = "Zone_%d_end" % zone
+            event['startThread'].start()
+            event['endThread'].start()
 
     def drop(self, id):
         pass
