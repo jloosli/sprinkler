@@ -8,6 +8,7 @@ from quick2wire.gpio import pins, Out
 import atexit
 import time, datetime
 import threading
+import uuid
 
 
 # GPIO PIN DEFINES (using quick2wire GPIO numbers)
@@ -15,7 +16,7 @@ import threading
 # NUMBER OF STATIONS
 num_stations = 16
 
-# STATION BITS 
+# STATION BITS
 values = [0]*num_stations
 
 pin_sr_clk = pins.pin(7, Out) # Pin 7 (GPIO 4)
@@ -60,21 +61,30 @@ class Scheduler:
 
     def __init__(self):
         # self.s = sched.scheduler(time.time, time.sleep)
-        self.events=[]
+        self.pool = []
 
     def add(self, zone, start, duration):
-        event = []
+        #id: uuid, zone, start, duration, startThread, endThread, status : queue|started|completed
         if start > datetime.datetime.now():
             delta = start - datetime.datetime.now()
+            event = {
+                "id": uuid.uuid1(),
+                "zone": zone,
+                "start": start,
+                "duration": duration,
+                "status": 'queued',
+                "startThread": threading.Timer(delta.total_seconds(), zoneOn, args=[zone]),
+                "endThread": threading.Timer((delta + duration).total_seconds(), zonesOff)
+            }
             # duration = datetime.timedelta(duration)
             print ("Turning on zone %d in %s" % (zone, str(delta)))
-            event.append(threading.Timer(delta.total_seconds(), zoneOn, args=[zone]))
-            event.append(threading.Timer((delta + duration).total_seconds(), zonesOff))
-            event[0].name = "Zone_%d_start" % zone
-            event[1].name = "Zone_%d_end" % zone
-            for e in event:
-                e.start()
-        self.events.append(set(event))
+            event.startThread.name = "Zone_%d_start" % zone
+            event.endThread.name = "Zone_%d_end" % zone
+            event.startThread.start()
+            event.endThread.start()
+
+    def drop(self, id):
+        pass
 
     def run(self):
         # print ["\n".split(x) for x in self.s.queue]
@@ -112,7 +122,7 @@ class KodeFunHTTPRequestHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 parsed=urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
                 sn = int(parsed['sid'][0])
-                v  = int(parsed['v'][0])                        
+                v = int(parsed['v'][0])                        
                 if sn<0 or sn>(num_stations-1) or v<0 or v>1:
                     self.wfile.write(bytes('<script>alert(\"Wrong value!\");</script>', 'utf-8'))
                 else:
@@ -125,7 +135,7 @@ class KodeFunHTTPRequestHandler(BaseHTTPRequestHandler):
                 self.wfile.write(bytes('<script>window.location=\".\";</script>', 'utf-8'))
             else:
                 self.send_response(200)
-                self.send_header('Content-type','text/html')
+                self.send_header('Content-type', 'text/html')
                 self.end_headers()
                 self.wfile.write(bytes("<script>\nvar nstations=", "utf-8"))
                 self.wfile.write(bytes(str(num_stations), "utf-8"))
@@ -138,7 +148,7 @@ class KodeFunHTTPRequestHandler(BaseHTTPRequestHandler):
 
         except IOError:
             self.send_error(404, 'file not found')
-    
+   
 def run():
     disableShiftRegisterOutput()
     setShiftRegister(values)
