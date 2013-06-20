@@ -88,12 +88,13 @@ class Scheduler:
         pass
 
     def status(self):
-        thePool = self.pool[:]
-        for event in thePool:
+        thePool = []
+        for event in self.pool:
             if event['status'] == 'queue':
                 event['timeUntilStart'] = event['start'] - datetime.datetime.now()
             elif event['status'] == 'started':
                 event['timeLeft'] = event['finish'] - datetime.datetime.now()
+            thePool.append(event)
         return thePool
 
     def run(self):
