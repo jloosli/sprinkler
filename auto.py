@@ -8,7 +8,7 @@ from quick2wire.gpio import pins, Out
 import atexit
 import time, datetime
 import threading
-import uuid
+from uuid import uuid1
 
 
 # GPIO PIN DEFINES (using quick2wire GPIO numbers)
@@ -53,7 +53,7 @@ def zoneOn(zone):
 
 def zonesOff():
     print("Turning off all zones")
-    values=[0]*num_stations
+    values = [0]*num_stations
     setShiftRegister(values)
 
 
@@ -68,7 +68,7 @@ class Scheduler:
         if start > datetime.datetime.now():
             delta = start - datetime.datetime.now()
             event = {
-                "id": uuid.uuid1(),
+                "id": uuid1(),
                 "zone": zone,
                 "start": start,
                 "finish": start + duration,
@@ -184,8 +184,8 @@ def run():
     while threading.active_count() > 1:
         print ("Current threading:")
         print(s.status())
-        for thread in threading.enumerate():
-            print (thread)
+        # for thread in threading.enumerate():
+        #     print (thread)
         time.sleep(10)
 
 
