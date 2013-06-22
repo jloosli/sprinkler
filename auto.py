@@ -84,7 +84,7 @@ class Scheduler:
         idx, waterSet = self.getSet(setId)
         print (waterSet)
         # If zonePos > zones, wrap everything up
-        if (len(waterSet['zones'])) < waterSet['zonePos']:
+        if (len(waterSet['zones'])) <= waterSet['zonePos']:
             self.pool[idx]['status'] = 'completed'
             zonesOff()
             return
