@@ -63,6 +63,42 @@ class Scheduler:
         # self.s = sched.scheduler(time.time, time.sleep)
         self.pool = []
 
+    def addSet(self, start, zones):
+        '''start datetime
+        zones = [(zone, duration), (zone, duration)]
+        '''
+        if start > datetime.datetime.now():
+            delta = start - datetime.datetime.now()
+            waterset = {
+                "setId": uuid1(), # Unique ID
+                "start": start, # Start time
+                "status": 'queued', # Current Status
+                "zones": zones, # Zones to run
+                "zonePos": 0 # Current position in zones to run
+            }
+            waterset["thread"] = threading.Timer(delta.total_seconds(), self.runSet, args=[waterset['setId']])
+            self.pool.append(waterset)
+
+    def runSet(self, setId):
+        idx, waterSet = self.getSet(setId)
+        # If zonePos > zones, wrap everything up
+        if (len(waterSet['zones'])) > waterSet['zonePos']:
+            self.pool[idx]['status'] = 'completed'
+            zonesOff()
+            return
+
+        if waterSet['status'] == 'queued':
+            self.pool[idx]['status'] = 'started'
+        zoneOn(waterSet['zones'][waterSet['zonePos'][0]])
+        threading.Timer(waterSet['zones'][waterSet['zonePos'][1]], self.runSet, args=[waterSet['setId']])
+        self.pool[idx]['zonePos'] += 1
+
+    def getSet(self, setId):
+        for idx, waterset in enumerate(self.pool):
+            if waterset['setId'] == setId:
+                return (idx, waterset)
+        return False
+
     def add(self, zone, start, duration):
         #id: uuid, zone, start, duration, startThread, endThread, status : queue|started|completed
         if start > datetime.datetime.now():
@@ -177,17 +213,18 @@ def run():
     gap = datetime.timedelta(minutes=5)
     pause = datetime.timedelta(seconds=10)
     s = Scheduler()
-    s.add(2, nextStart * 2, gap)
-    s.add(1, nextStart+gap+pause, gap)
-    s.add(0, nextStart+gap*2 + pause, gap)
-    s.add(3, nextStart+gap*3 + pause, gap/5*2)
+    s.addSet(nextStart,[(0,pause),(1,pause),(2,pause)])
+    # s.add(2, nextStart * 2, gap)
+    # s.add(1, nextStart+gap+pause, gap)
+    # s.add(0, nextStart+gap*2 + pause, gap)
+    # s.add(3, nextStart+gap*3 + pause, gap/5*2)
     # s.run()
     while threading.active_count() > 1:
         print ("Current threading:")
         print(s.status())
         # for thread in threading.enumerate():
         #     print (thread)
-        time.sleep(10)
+        time.sleep(60)
 
 
 
