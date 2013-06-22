@@ -91,7 +91,7 @@ class Scheduler:
 
         if waterSet['status'] == 'queued':
             self.pool[idx]['status'] = 'started'
-        zoneOn(waterSet['zones'][waterSet['zonePos'][0]])
+        zoneOn(waterSet['zones'][waterSet['zonePos']][0])
         self.pool[idx]['thread'] = threading.Timer(waterSet['zones'][waterSet['zonePos'][1]], self.runSet, args=[waterSet['setId']])
         self.pool[idx]['thread'].start()
         self.pool[idx]['zonePos'] += 1
