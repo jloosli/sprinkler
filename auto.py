@@ -46,7 +46,7 @@ def setShiftRegister(values):
 
 def zoneOn(zone):
     print("Turning on zone %d" % zone)
-    values=[0]*num_stations
+    values = [0]*num_stations
     values[zone] = 1
     setShiftRegister(values)
 
@@ -176,10 +176,10 @@ def run():
 
     gap = datetime.timedelta(minutes=5)
     pause = datetime.timedelta(seconds=10)
-    s=Scheduler()
-    s.add(0, nextStart, gap)
+    s = Scheduler()
+    s.add(2, nextStart * 2, gap)
     s.add(1, nextStart+gap+pause, gap)
-    s.add(2, nextStart+gap*2 + pause, gap)
+    s.add(0, nextStart+gap*2 + pause, gap)
     s.add(3, nextStart+gap*3 + pause, gap/5*2)
     # s.run()
     while threading.active_count() > 1:
