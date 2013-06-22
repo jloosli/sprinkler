@@ -77,6 +77,7 @@ class Scheduler:
                 "zonePos": 0 # Current position in zones to run
             }
             waterset["thread"] = threading.Timer(delta.total_seconds(), self.runSet, args=[waterset['setId']])
+            waterset['thread'].start()
             self.pool.append(waterset)
 
     def runSet(self, setId):
@@ -90,7 +91,8 @@ class Scheduler:
         if waterSet['status'] == 'queued':
             self.pool[idx]['status'] = 'started'
         zoneOn(waterSet['zones'][waterSet['zonePos'][0]])
-        threading.Timer(waterSet['zones'][waterSet['zonePos'][1]], self.runSet, args=[waterSet['setId']])
+        self.pool[idx]['thread'] = threading.Timer(waterSet['zones'][waterSet['zonePos'][1]], self.runSet, args=[waterSet['setId']])
+        self.pool[idx]['thread'].start()
         self.pool[idx]['zonePos'] += 1
 
     def getSet(self, setId):
@@ -214,10 +216,10 @@ def run():
     pause = datetime.timedelta(seconds=10)
     s = Scheduler()
     s.addSet(nextStart,[(0,pause),(1,pause),(2,pause)])
-    # s.add(2, nextStart * 2, gap)
-    # s.add(1, nextStart+gap+pause, gap)
-    # s.add(0, nextStart+gap*2 + pause, gap)
-    # s.add(3, nextStart+gap*3 + pause, gap/5*2)
+    # s.add(2, nextStart * 2, gap+gap)
+    # s.add(1, nextStart+gap+gap+pause, gap)
+    # s.add(0, nextStart+gap+gap+gap + pause, gap)
+    # s.add(3, nextStart+gap+gap+gap+gap + pause, gap)
     # s.run()
     while threading.active_count() > 1:
         print ("Current threading:")
