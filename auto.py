@@ -82,6 +82,7 @@ class Scheduler:
 
     def runSet(self, setId):
         idx, waterSet = self.getSet(setId)
+        print (waterSet)
         # If zonePos > zones, wrap everything up
         if (len(waterSet['zones'])) > waterSet['zonePos']:
             self.pool[idx]['status'] = 'completed'
@@ -221,12 +222,12 @@ def run():
     # s.add(0, nextStart+gap+gap+gap + pause, gap)
     # s.add(3, nextStart+gap+gap+gap+gap + pause, gap)
     # s.run()
-    while threading.active_count() > 1:
-        print ("Current threading:")
-        print(s.status())
-        # for thread in threading.enumerate():
-        #     print (thread)
-        time.sleep(60)
+    # while threading.active_count() > 1:
+    #     print ("Current threading:")
+    #     print(s.status())
+    #     # for thread in threading.enumerate():
+    #     #     print (thread)
+    #     time.sleep(60)
 
 
 
