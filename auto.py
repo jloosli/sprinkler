@@ -92,7 +92,9 @@ class Scheduler:
         if waterSet['status'] == 'queued':
             self.pool[idx]['status'] = 'started'
         zoneOn(waterSet['zones'][waterSet['zonePos']][0])
-        self.pool[idx]['thread'] = threading.Timer(waterSet['zones'][waterSet['zonePos']][1].total_seconds(), self.runSet, args=[waterSet['setId']])
+        self.pool[idx]['thread'] = threading.Timer(datetime.timedelta(
+            minutes=waterSet['zones'][waterSet['zonePos']][1]).total_seconds(),
+            self.runSet, args=[waterSet['setId']])
         self.pool[idx]['thread'].start()
         self.pool[idx]['zonePos'] += 1
 
@@ -213,11 +215,8 @@ def run():
 
     print ("Next start is %s" % nextStart)
 
-    min_5 = datetime.timedelta(minutes=5)
-    min_10 = datetime.timedelta(minutes=10)
-    pause = datetime.timedelta(seconds=10)
     s = Scheduler()
-    s.addSet(nextStart,[(0,min_5),(1,min_5),(2,min_10),(3,min_5)])
+    s.addSet(nextStart, [(0, 5), (1, 10), (2, 10),(3, 5)])
     # s.add(2, nextStart * 2, gap+gap)
     # s.add(1, nextStart+gap+gap+pause, gap)
     # s.add(0, nextStart+gap+gap+gap + pause, gap)
