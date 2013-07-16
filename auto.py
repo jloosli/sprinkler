@@ -19,21 +19,24 @@ num_stations = 16
 # STATION BITS
 values = [0]*num_stations
 
-pin_sr_clk = pins.pin(7, Out) # Pin 7 (GPIO 4)
-pin_sr_noe = pins.pin(0, Out) # Pin 11 (GPIO 17)
-pin_sr_dat = pins.pin(2, Out) # Pin 13 (GPIO 21) # May need to be changed with rev.2 board
-pin_sr_lat = pins.pin(3, Out) # Pin 15 (GPIO 22)
+pin_sr_clk = pins.pin(7, Out)  # Pin 7 (GPIO 4)
+pin_sr_noe = pins.pin(0, Out)  # Pin 11 (GPIO 17)
+pin_sr_dat = pins.pin(2, Out)  # Pin 13 (GPIO 21) # May need to be changed with rev.2 board
+pin_sr_lat = pins.pin(3, Out)  # Pin 15 (GPIO 22)
 
 pin_sr_clk.open()
 pin_sr_lat.open()
 pin_sr_noe.open()
 pin_sr_dat.open()
 
+
 def enableShiftRegisterOutput():
     pin_sr_noe.value = 0
 
+
 def disableShiftRegisterOutput():
     pin_sr_noe.value = 1
+
 
 def setShiftRegister(values):
     pin_sr_clk.value = False
@@ -43,6 +46,7 @@ def setShiftRegister(values):
         pin_sr_dat.value = values[num_stations-1-s]
         pin_sr_clk.value = True
     pin_sr_lat.value = True
+
 
 def zoneOn(zone):
     print("Turning on zone %d" % zone)
@@ -64,17 +68,19 @@ class Scheduler:
         self.pool = []
 
     def addSet(self, start, zones):
-        '''start datetime
+        '''
+        Add watering set
+        start datetime
         zones = [(zone, duration), (zone, duration)]
         '''
         if start > datetime.datetime.now():
             delta = start - datetime.datetime.now()
             waterset = {
-                "setId": uuid1(), # Unique ID
-                "start": start, # Start time
-                "status": 'queued', # Current Status
-                "zones": zones, # Zones to run
-                "zonePos": 0 # Current position in zones to run
+                "setId": uuid1(),  # Unique ID
+                "start": start,  # Start time
+                "status": 'queued',  # Current Status
+                "zones": zones,  # Zones to run
+                "zonePos": 0  # Current position in zones to run
             }
             waterset["thread"] = threading.Timer(delta.total_seconds(), self.runSet, args=[waterset['setId']])
             waterset['thread'].start()
@@ -104,81 +110,67 @@ class Scheduler:
                 return (idx, waterset)
         return False
 
-    def add(self, zone, start, duration):
-        #id: uuid, zone, start, duration, startThread, endThread, status : queue|started|completed
-        if start > datetime.datetime.now():
-            delta = start - datetime.datetime.now()
-            event = {
-                "id": uuid1(),
-                "zone": zone,
-                "start": start,
-                "finish": start + duration,
-                "status": 'queued',
-                "startThread": threading.Timer(delta.total_seconds(), zoneOn, args=[zone]),
-                "endThread": threading.Timer((delta + duration).total_seconds(), zonesOff)
-            }
-            # duration = datetime.timedelta(duration)
-            print ("Turning on zone %d in %s" % (zone, str(delta)))
-            event['startThread'].name = "Zone_%d_start" % zone
-            event['endThread'].name = "Zone_%d_end" % zone
-            event['startThread'].start()
-            event['endThread'].start()
-            self.pool.append(event)
-
-    def drop(self, id):
-        pass
+    def dropSet(self, id):
+        idx, waterset = self.getSet(id)
+        waterset['thread'].cancel()
+        if waterset['status'] != 'queued':
+            zonesOff()
+        del self.pool[idx]
 
     def status(self):
         thePool = []
         for event in self.pool:
-            if event['status'] == 'queue':
+            if event['status'] == 'queued':
                 event['timeUntilStart'] = event['start'] - datetime.datetime.now()
             elif event['status'] == 'started':
                 event['timeLeft'] = event['finish'] - datetime.datetime.now()
             thePool.append(event)
         return thePool
 
-    def run(self):
-        # print ["\n".split(x) for x in self.s.queue]
-        # self.s.run()
-        pass
-
-
-
 
 #Create custom HTTPRequestHandler class
 class KodeFunHTTPRequestHandler(BaseHTTPRequestHandler):
 
-    #handle GET command
+    # handle GET command
     def do_GET(self):
         global values
-        rootdir = '.' #file location
+        rootdir = '.'  # file location
         try:
-            if self.path.endswith('.js'):
-                f = open(rootdir + self.path) #open requested file
+            if self.path.endswith('.js') or self.path.endswith('.html'):
+                with open(rootdir + self.path) as f:  # open requested file
 
-                #send code 200 response
-                self.send_response(200)
+                    #send code 200 response
+                    self.send_response(200)
 
-                #send header first
-                self.send_header('Content-type', 'text/html')
-                self.end_headers()
+                    #send header first
+                    contentType = 'javascript' if self.path.endswith('js') else 'html'
+                    self.send_header('Content-type', 'text/' + contentType)
+                    self.end_headers()
 
-                #send file content to client
-                self.wfile.write(bytes(f.read(), "utf-8"))
-                f.close()
+                    #send file content to client
+                    self.wfile.write(bytes(f.read(), "utf-8"))
                 return
-            elif '/cv?' in self.path:
+            elif '/api/' in self.path:
+                '''
+                pattern: /api/{command}/{id:optional}
+                rest options:
+                get: get all programs
+                save: save new program
+                query: get specific program
+                remove: remove specific program
+                delete: delete all programs
+                '''
+
                 self.send_response(200)
-                self.send_header('Content-type','text/html')
+                self.send_header('Content-type', 'application/json')
                 self.end_headers()
-                parsed=urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
+                parsed = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
                 sn = int(parsed['sid'][0])
-                v = int(parsed['v'][0])                        
-                if sn<0 or sn>(num_stations-1) or v<0 or v>1:
+                v = int(parsed['v'][0])
+                if sn < 0 or sn > (num_stations-1) or v < 0 or v > 1:
                     self.wfile.write(bytes('<script>alert(\"Wrong value!\");</script>', 'utf-8'))
                 else:
-                    if v==0:
+                    if v == 0:
                         values[sn] = 0
                     else:
                         values[sn] = 1
@@ -192,7 +184,7 @@ class KodeFunHTTPRequestHandler(BaseHTTPRequestHandler):
                 self.wfile.write(bytes("<script>\nvar nstations=", "utf-8"))
                 self.wfile.write(bytes(str(num_stations), "utf-8"))
                 self.wfile.write(bytes(', values=[', "utf-8"))
-                for s in range(0,num_stations):
+                for s in range(0, num_stations):
                     self.wfile.write(bytes(str(values[s]), "utf-8"))
                     self.wfile.write(bytes(',', "utf-8"))
                 self.wfile.write(bytes('0];\n</script>\n', "utf-8"))
@@ -200,7 +192,8 @@ class KodeFunHTTPRequestHandler(BaseHTTPRequestHandler):
 
         except IOError:
             self.send_error(404, 'file not found')
-   
+
+
 def run():
     disableShiftRegisterOutput()
     setShiftRegister(values)
@@ -209,35 +202,22 @@ def run():
     #start at 7 am
     startTime = datetime.time(7)
     nextStart = datetime.datetime.now() + datetime.timedelta(seconds=5)
-    #nextStart = datetime.datetime.combine(datetime.date.today(),startTime)
     if nextStart < datetime.datetime.now():
         nextStart = nextStart + datetime.timedelta(days=1)
 
     print ("Next start is %s" % nextStart)
 
     s = Scheduler()
-    s.addSet(nextStart, [(0, 5), (1, 10), (2, 10),(3, 5)])
-    # s.add(2, nextStart * 2, gap+gap)
-    # s.add(1, nextStart+gap+gap+pause, gap)
-    # s.add(0, nextStart+gap+gap+gap + pause, gap)
-    # s.add(3, nextStart+gap+gap+gap+gap + pause, gap)
-    # s.run()
-    # while threading.active_count() > 1:
-    #     print ("Current threading:")
-    #     print(s.status())
-    #     # for thread in threading.enumerate():
-    #     #     print (thread)
-    #     time.sleep(60)
-
-
+    s.addSet(nextStart, [(0, 5), (1, 10), (2, 10), (3, 5)])
 
     #ip and port of servr
     #by default http server port is 8080
-    # server_address = ('', 8080)
-    # httpd = HTTPServer(server_address, KodeFunHTTPRequestHandler)
-    # print('OpenSprinkler Pi is running...')
-    # while True:
-    #     httpd.handle_request()
+    server_address = ('', 8080)
+    httpd = HTTPServer(server_address, KodeFunHTTPRequestHandler)
+    print('OpenSprinkler Pi is running...')
+    while True:
+        httpd.handle_request()
+
 
 def progexit():
     global values
