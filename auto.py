@@ -110,12 +110,16 @@ class Scheduler:
                 return (idx, waterset)
         return False
 
-    def dropSet(self, id):
+    def removeSet(self, id):
         idx, waterset = self.getSet(id)
         waterset['thread'].cancel()
         if waterset['status'] != 'queued':
             zonesOff()
         del self.pool[idx]
+
+    def removeAll(self):
+        for idx in range(len(self.pool)):
+            self.removeSet(idx)
 
     def status(self):
         thePool = []
