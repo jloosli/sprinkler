@@ -61,6 +61,17 @@ def zonesOff():
     setShiftRegister(values)
 
 
+def minToHM(minutes):
+    minutes = int(minutes)
+    hrs = minutes / 3600
+    mins = minutes - hrs * 3600
+    return (hrs, mins)
+
+
+def HMToMin(hm):
+    return hm[0] * 3600 + hm[1]
+
+
 class Scheduler:
 
     def __init__(self):
@@ -219,7 +230,7 @@ def run():
     # s.addSet(nextStart, [(0, 5), (1, 10), (2, 10), (3, 5)])
     for p in db.programs.find():
         print(p)
-        startTime = datetime.time(p['start'])
+        startTime = datetime.time(minToHM(p['start']))
         print("Start is at %s" % startTime)
         s.addSet(startTime, p['zones'])
 
