@@ -231,9 +231,10 @@ def run():
     for p in db.programs.find():
         print(p)
         startTime = datetime.datetime.combine(datetime.date.today(), datetime.time(*minToHM(p['start'])))
-        print("Start is at %s" % startTime)
+        print("Start for program %s is at %s" % (p['_id'], startTime))
         s.addSet(startTime, p['zones'])
     timeToNextMidnight = datetime.datetime.combine(datetime.date.today() + datetime.timedelta(days=1), datetime.time(0)) - datetime.datetime.now()
+    print("Will check again in %s" % timeToNextMidnight)
     nextRun = threading.Timer(timeToNextMidnight.total_seconds(), run)
     nextRun.start()
     print(nextRun)
@@ -261,8 +262,6 @@ def progexit():
     pin_sr_lat.close()
     pin_sr_noe.close()
     pin_sr_dat.close()
-    while threading.active_count() > 0:
-        time.sleep(0.1)
 
 
 s = Scheduler()
