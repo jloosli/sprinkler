@@ -213,6 +213,7 @@ class KodeFunHTTPRequestHandler(BaseHTTPRequestHandler):
 
 
 def run():
+    global s
     disableShiftRegisterOutput()
     setShiftRegister(values)
     enableShiftRegisterOutput()
