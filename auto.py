@@ -249,7 +249,6 @@ def run():
 
     # print ("Next start is %s" % nextStart)
 
-
     #ip and port of servr
     #by default http server port is 8080
     server_address = ('', 8080)
@@ -267,8 +266,9 @@ def progexit():
     pin_sr_lat.close()
     pin_sr_noe.close()
     pin_sr_dat.close()
-    for t in threading.enumerate():
-        t.join()
+    while threading.active_count() > 0:
+        time.sleep(0.1)
+
 
 s = Scheduler()
 if __name__ == '__main__':
@@ -284,4 +284,4 @@ if __name__ == '__main__':
     print([x for x in db.settings.find()])
     print([x for x in db.programs.find()])
 
-    
+
