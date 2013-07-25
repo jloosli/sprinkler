@@ -267,6 +267,8 @@ def progexit():
     pin_sr_lat.close()
     pin_sr_noe.close()
     pin_sr_dat.close()
+    for t in threading.enumerate():
+        t.join()
 
 s = Scheduler()
 if __name__ == '__main__':
