@@ -9,8 +9,16 @@ import atexit
 import time, datetime
 import threading
 from uuid import uuid1
+from pymongo import MongoClient
 
+# Setup Mongo
+db = MongoClient()['sprinkler']
+settings = db.settings
+programs = db.programs
+sprinklerLog = db.log
 
+print(db.settings.find())
+print(db.programs.find())
 # GPIO PIN DEFINES (using quick2wire GPIO numbers)
 
 # NUMBER OF STATIONS
@@ -196,6 +204,9 @@ class KodeFunHTTPRequestHandler(BaseHTTPRequestHandler):
 
         except IOError:
             self.send_error(404, 'file not found')
+
+    def do_POST(self):
+        pass
 
 
 def run():
