@@ -51,7 +51,7 @@ def setShiftRegister(values):
 def zoneOn(zone):
     print("Turning on zone %d" % zone)
     values = [0]*num_stations
-    values[zone] = 1
+    values[int(zone)] = 1
     setShiftRegister(values)
 
 
