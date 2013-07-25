@@ -230,7 +230,7 @@ def run():
     # s.addSet(nextStart, [(0, 5), (1, 10), (2, 10), (3, 5)])
     for p in db.programs.find():
         print(p)
-        startTime = datetime.time(minToHM(p['start']))
+        startTime = datetime.time(*minToHM(p['start']))
         print("Start is at %s" % startTime)
         s.addSet(startTime, p['zones'])
 
