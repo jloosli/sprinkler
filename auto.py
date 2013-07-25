@@ -268,7 +268,7 @@ def progexit():
     pin_sr_noe.close()
     pin_sr_dat.close()
 
-
+s = Scheduler()
 if __name__ == '__main__':
     atexit.register(progexit)
     run()
@@ -282,4 +282,4 @@ if __name__ == '__main__':
     print([x for x in db.settings.find()])
     print([x for x in db.programs.find()])
 
-    s = Scheduler()
+    
