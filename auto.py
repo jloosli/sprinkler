@@ -283,8 +283,8 @@ if __name__ == '__main__':
 
 
         #ip and port of servr
-    #by default http server port is 8080
-    server_address = ('', 8080)
+    #by default http server port is 8000
+    server_address = ('', 8000)
     httpd = HTTPServer(server_address, KodeFunHTTPRequestHandler)
     log.debug('OpenSprinkler Pi is running...')
     running = True
