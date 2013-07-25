@@ -8,8 +8,13 @@ from quick2wire.gpio import pins, Out
 import atexit
 import time, datetime
 import threading
+import logging
 from uuid import uuid1
 from pymongo import MongoClient
+log = logging.getLogger()
+thisPath = os.path.abspath(os.path.dirname(__file__))
+logging.basicConfig(filename=os.path.join(thisPath, 'sprinkler.log'), level=logging.DEBUG)
+
 
 # GPIO PIN DEFINES (using quick2wire GPIO numbers)
 
@@ -49,14 +54,14 @@ def setShiftRegister(values):
 
 
 def zoneOn(zone):
-    print("Turning on zone %d" % zone)
+    log.info("Turning on zone %d" % zone)
     values = [0]*num_stations
     values[int(zone)] = 1
     setShiftRegister(values)
 
 
 def zonesOff():
-    print("Turning off all zones")
+    log.info("Turning off all zones")
     values = [0]*num_stations
     setShiftRegister(values)
 
@@ -99,7 +104,7 @@ class Scheduler:
 
     def runSet(self, setId):
         idx, waterSet = self.getSet(setId)
-        print (waterSet)
+        log.info(waterSet)
         # If zonePos > zones, wrap everything up
         if (len(waterSet['zones'])) <= waterSet['zonePos']:
             self.pool[idx]['status'] = 'completed'
@@ -224,20 +229,20 @@ def run():
     programs = db.programs
     sprinklerLog = db.log
 
-    print([x for x in db.settings.find()])
-    print([x for x in db.programs.find()])
+    log.debug([x for x in db.settings.find()])
+    log.debug([x for x in db.programs.find()])
 
     # s.addSet(nextStart, [(0, 5), (1, 10), (2, 10), (3, 5)])
     for p in db.programs.find():
-        print(p)
+        log.debug(p)
         startTime = datetime.datetime.combine(datetime.date.today(), datetime.time(*minToHM(p['start'])))
-        print("Start for program %s is at %s" % (p['_id'], startTime))
+        log.debug("Start for program %s is at %s" % (p['_id'], startTime))
         s.addSet(startTime, p['zones'])
     timeToNextMidnight = datetime.datetime.combine(datetime.date.today() + datetime.timedelta(days=1), datetime.time(0)) - datetime.datetime.now()
-    print("Will check again in %s" % timeToNextMidnight)
+    log.debug("Will check again in %s" % timeToNextMidnight)
     nextRun = threading.Timer(timeToNextMidnight.total_seconds(), run)
     nextRun.start()
-    print(nextRun)
+    log.debug(nextRun)
 
 
 
@@ -262,6 +267,7 @@ def progexit():
     pin_sr_lat.close()
     pin_sr_noe.close()
     pin_sr_dat.close()
+    log.debug("Shutting Down")
 
 
 s = Scheduler()
@@ -275,14 +281,12 @@ if __name__ == '__main__':
     programs = db.programs
     sprinklerLog = db.log
 
-    print([x for x in db.settings.find()])
-    print([x for x in db.programs.find()])
 
         #ip and port of servr
     #by default http server port is 8080
     server_address = ('', 8080)
     httpd = HTTPServer(server_address, KodeFunHTTPRequestHandler)
-    print('OpenSprinkler Pi is running...')
+    log.debug('OpenSprinkler Pi is running...')
     running = True
     while running:
         httpd.handle_request()
