@@ -11,14 +11,6 @@ import threading
 from uuid import uuid1
 from pymongo import MongoClient
 
-# Setup Mongo
-db = MongoClient()['sprinkler']
-settings = db.settings
-programs = db.programs
-sprinklerLog = db.log
-
-print([x for x in db.settings.find()])
-print([x for x in db.programs.find()])
 # GPIO PIN DEFINES (using quick2wire GPIO numbers)
 
 # NUMBER OF STATIONS
@@ -214,16 +206,33 @@ def run():
     setShiftRegister(values)
     enableShiftRegisterOutput()
 
-    #start at 7 am
-    startTime = datetime.time(7)
-    nextStart = datetime.datetime.now() + datetime.timedelta(seconds=5)
-    if nextStart < datetime.datetime.now():
-        nextStart = nextStart + datetime.timedelta(days=1)
+    # Setup Mongo
+    db = MongoClient()['sprinkler']
+    settings = db.settings
+    programs = db.programs
+    sprinklerLog = db.log
 
-    print ("Next start is %s" % nextStart)
+    print([x for x in db.settings.find()])
+    print([x for x in db.programs.find()])
 
     s = Scheduler()
-    #s.addSet(nextStart, [(0, 5), (1, 10), (2, 10), (3, 5)])
+    # s.addSet(nextStart, [(0, 5), (1, 10), (2, 10), (3, 5)])
+    for p in db.programs.find():
+        print(p)
+        startTime = datetime.time(p.start)
+        print("Start is at %s" % startTime)
+        s.addSet(startTime, p.zones)
+
+
+
+    #start at 7 am
+    # startTime = datetime.time(7)
+    # nextStart = datetime.datetime.now() + datetime.timedelta(seconds=5)
+    # if nextStart < datetime.datetime.now():
+    #     nextStart = nextStart + datetime.timedelta(days=1)
+
+    # print ("Next start is %s" % nextStart)
+
 
     #ip and port of servr
     #by default http server port is 8080
@@ -247,3 +256,13 @@ def progexit():
 if __name__ == '__main__':
     atexit.register(progexit)
     run()
+
+    # Setup Mongo
+    db = MongoClient()['sprinkler']
+    settings = db.settings
+    programs = db.programs
+    sprinklerLog = db.log
+
+    print([x for x in db.settings.find()])
+    print([x for x in db.programs.find()])
+
