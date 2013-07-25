@@ -226,13 +226,17 @@ def run():
     print([x for x in db.settings.find()])
     print([x for x in db.programs.find()])
 
-    s = Scheduler()
     # s.addSet(nextStart, [(0, 5), (1, 10), (2, 10), (3, 5)])
     for p in db.programs.find():
         print(p)
         startTime = datetime.datetime.combine(datetime.date.today(), datetime.time(*minToHM(p['start'])))
         print("Start is at %s" % startTime)
         s.addSet(startTime, p['zones'])
+    timeToNextMidnight = datetime.datetime.combine(datetime.date.today() + datetime.timedelta(days=1), datetime.time(0)) - datetime.datetime.now()
+    nextRun = threading.Timer(timeToNextMidnight.total_seconds(), run)
+    nextRun.start()
+    print(nextRun)
+
 
 
 
@@ -277,3 +281,4 @@ if __name__ == '__main__':
     print([x for x in db.settings.find()])
     print([x for x in db.programs.find()])
 
+    s = Scheduler()
