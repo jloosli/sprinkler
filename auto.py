@@ -63,8 +63,8 @@ def zonesOff():
 
 def minToHM(minutes):
     minutes = int(minutes)
-    hrs = minutes / 3600
-    mins = minutes - hrs * 3600
+    hrs = int(minutes / 3600)
+    mins = int(minutes - hrs * 3600)
     return (hrs, mins)
 
 
