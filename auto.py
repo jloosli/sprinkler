@@ -17,8 +17,8 @@ settings = db.settings
 programs = db.programs
 sprinklerLog = db.log
 
-print(db.settings.find())
-print(db.programs.find())
+print([x for x in db.settings.find()])
+print([x for x in db.programs.find()])
 # GPIO PIN DEFINES (using quick2wire GPIO numbers)
 
 # NUMBER OF STATIONS
