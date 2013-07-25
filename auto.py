@@ -223,7 +223,7 @@ def run():
     print ("Next start is %s" % nextStart)
 
     s = Scheduler()
-    s.addSet(nextStart, [(0, 5), (1, 10), (2, 10), (3, 5)])
+    #s.addSet(nextStart, [(0, 5), (1, 10), (2, 10), (3, 5)])
 
     #ip and port of servr
     #by default http server port is 8080
