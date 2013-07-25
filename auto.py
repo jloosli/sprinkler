@@ -211,9 +211,9 @@ class KodeFunHTTPRequestHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         pass
 
-
 def run():
     global s
+    global running
     disableShiftRegisterOutput()
     setShiftRegister(values)
     enableShiftRegisterOutput()
@@ -251,15 +251,18 @@ def run():
 
     #ip and port of servr
     #by default http server port is 8080
-    server_address = ('', 8080)
-    httpd = HTTPServer(server_address, KodeFunHTTPRequestHandler)
-    print('OpenSprinkler Pi is running...')
-    while True:
-        httpd.handle_request()
+server_address = ('', 8080)
+httpd = HTTPServer(server_address, KodeFunHTTPRequestHandler)
+print('OpenSprinkler Pi is running...')
+running = True
+while running:
+    httpd.handle_request()
 
 
 def progexit():
     global values
+    global running
+    running = False
     values = [0]*num_stations
     setShiftRegister(values)
     pin_sr_clk.close()
