@@ -13,9 +13,13 @@ from uuid import uuid1
 from subprocess import call
 from pymongo import MongoClient
 log = logging.getLogger()
+log.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - Line: %(lineno)d\n%(message)s')
 thisPath = os.path.abspath(os.path.dirname(__file__))
-logging.basicConfig(filename=os.path.join(thisPath, 'sprinkler.log'), level=logging.DEBUG)
-logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - Line: %(lineno)d\n%(message)s')
+fh = logging.FileHandler(os.path.join(thisPath, 'sprinkler.log'))
+fh.setLevel(logging.DEBUG)
+fh.setFormatter(formatter)
+log.addHandler(fh)
 
 
 
