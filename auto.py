@@ -15,6 +15,8 @@ from pymongo import MongoClient
 log = logging.getLogger()
 thisPath = os.path.abspath(os.path.dirname(__file__))
 logging.basicConfig(filename=os.path.join(thisPath, 'sprinkler.log'), level=logging.DEBUG)
+logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - Line: %(lineno)d\n%(message)s')
+
 
 
 # GPIO PIN DEFINES (using quick2wire GPIO numbers)
