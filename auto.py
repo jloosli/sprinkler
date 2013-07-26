@@ -247,7 +247,7 @@ def run():
     # s.addSet(nextStart, [(0, 5), (1, 10), (2, 10), (3, 5)])
     for p in db.programs.find():
         log.debug(p)
-        startTime = datetime.datetime.combine(datetime.date.today(), datetime.time(*minToHM(p['start'])))
+        startTime = datetime.datetime.combine(datetime.date.today(), datetime.time(*p['start']))
         log.debug("Start for program %s is at %s" % (p['_id'], startTime))
         s.addSet(startTime, p['zones'])
     timeToNextMidnight = datetime.datetime.combine(datetime.date.today() + datetime.timedelta(days=1), datetime.time(0)) - datetime.datetime.now()
