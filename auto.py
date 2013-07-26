@@ -10,6 +10,7 @@ import time, datetime
 import threading
 import logging
 from uuid import uuid1
+from subprocess import call
 from pymongo import MongoClient
 log = logging.getLogger()
 thisPath = os.path.abspath(os.path.dirname(__file__))
@@ -23,6 +24,11 @@ num_stations = 16
 
 # STATION BITS
 values = [0]*num_stations
+
+# In case things don't close correctly, we'll just clear the pins and be ok if the command yields errors
+pinsToClear = [4, 17, 21, 22]
+for p in pinsToClear:
+    call(['gpio-admin', 'unexport', p])
 
 pin_sr_clk = pins.pin(7, Out)  # Pin 7 (GPIO 4)
 pin_sr_noe = pins.pin(0, Out)  # Pin 11 (GPIO 17)
