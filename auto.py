@@ -162,6 +162,7 @@ class Scheduler:
 
 #Create custom HTTPRequestHandler class
 class KodeFunHTTPRequestHandler(BaseHTTPRequestHandler):
+    global s
 
     # handle GET command
     def do_GET(self):
