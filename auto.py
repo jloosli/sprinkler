@@ -198,7 +198,7 @@ class KodeFunHTTPRequestHandler(BaseHTTPRequestHandler):
                 self.send_header('Content-type', 'application/json')
                 self.end_headers()
                 if '/test' in self.path:
-                    s.addSet(datetime.datetime.now() + datetime.timedelta(seconds=5),((0,1), (1,1), (2,1), (3,1))
+                    s.addSet(datetime.datetime.now() + datetime.timedelta(seconds=5),((0,1), (1,1), (2,1), (3,1)))
                 elif 'somethingelse' in self.path:
                     parsed = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
                     sn = int(parsed['sid'][0])
