@@ -191,24 +191,28 @@ class KodeFunHTTPRequestHandler(BaseHTTPRequestHandler):
                 query: get specific program
                 remove: remove specific program
                 delete: delete all programs
+                test: run each section for one minute
                 '''
 
                 self.send_response(200)
                 self.send_header('Content-type', 'application/json')
                 self.end_headers()
-                parsed = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
-                sn = int(parsed['sid'][0])
-                v = int(parsed['v'][0])
-                if sn < 0 or sn > (num_stations-1) or v < 0 or v > 1:
-                    self.wfile.write(bytes('<script>alert(\"Wrong value!\");</script>', 'utf-8'))
-                else:
-                    if v == 0:
-                        values[sn] = 0
+                if '/test' in self.path:
+                    s.addSet(datetime.datetime.now() + datetime.timedelta(seconds=5),((0,1), (1,1), (2,1), (3,1))
+                elif 'somethingelse' in self.path:
+                    parsed = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
+                    sn = int(parsed['sid'][0])
+                    v = int(parsed['v'][0])
+                    if sn < 0 or sn > (num_stations-1) or v < 0 or v > 1:
+                        self.wfile.write(bytes('<script>alert(\"Wrong value!\");</script>', 'utf-8'))
                     else:
-                        values[sn] = 1
-                    setShiftRegister(values)
+                        if v == 0:
+                            values[sn] = 0
+                        else:
+                            values[sn] = 1
+                        setShiftRegister(values)
 
-                self.wfile.write(bytes('<script>window.location=\".\";</script>', 'utf-8'))
+                    self.wfile.write(bytes('<script>window.location=\".\";</script>', 'utf-8'))
             else:
                 self.send_response(200)
                 self.send_header('Content-type', 'text/html')
