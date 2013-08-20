@@ -167,10 +167,10 @@ class KodeFunHTTPRequestHandler(BaseHTTPRequestHandler):
     # handle GET command
     def do_GET(self):
         global values
-        rootdir = '.'  # file location
+        rootdir = os.path.join(os.path.normpath(__file__), 'app')  # file location
         try:
             if self.path.endswith('.js') or self.path.endswith('.html'):
-                with open(rootdir + self.path) as f:  # open requested file
+                with open(os.path.join(rootdir, self.path)) as f:  # open requested file
 
                     #send code 200 response
                     self.send_response(200)
