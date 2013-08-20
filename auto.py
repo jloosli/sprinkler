@@ -249,7 +249,8 @@ def run():
     log.debug([x for x in db.settings.find()])
     log.debug([x for x in db.programs.find()])
 
-    # s.addSet(nextStart, [(0, 5), (1, 10), (2, 10), (3, 5)])
+    nextStart = datetime.datetime.now() + datetime.timedelta(seconds=5)
+    s.addSet(nextStart, [(2, 1), (0, 1), (1, 1), (3, 1)])
     for p in db.programs.find():
         log.debug(p)
         p['start'] = [int(x) for x in p['start']]
@@ -293,11 +294,11 @@ if __name__ == '__main__':
     atexit.register(progexit)
     run()
 
-    # Setup Mongo
-    db = MongoClient()['sprinkler']
-    settings = db.settings
-    programs = db.programs
-    sprinklerLog = db.log
+    # # Setup Mongo
+    # db = MongoClient()['sprinkler']
+    # settings = db.settings
+    # programs = db.programs
+    # sprinklerLog = db.log
 
 
         #ip and port of servr
