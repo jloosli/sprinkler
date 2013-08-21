@@ -103,7 +103,7 @@ class Scheduler:
         '''
         if start > datetime.datetime.now():
             delta = start - datetime.datetime.now()
-            log.info("Adding set that starts in {0}: {1}".format(delta.total_seconds(), 
+            log.info("Adding set that starts in {0}: {1}".format(delta.total_seconds()), 
                 ",".join(["({0},{1})".format(x[0],x[1]) for x in zones])
             )
             waterset = {
