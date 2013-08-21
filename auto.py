@@ -170,6 +170,7 @@ class KodeFunHTTPRequestHandler(BaseHTTPRequestHandler):
     # handle GET command
     def do_GET(self):
         global values
+
         rootdir = os.path.join(os.path.normpath(__file__), 'app')  # file location
         try:
             if self.path.endswith('.js') or self.path.endswith('.html'):
@@ -202,7 +203,7 @@ class KodeFunHTTPRequestHandler(BaseHTTPRequestHandler):
                 self.send_header('Content-type', 'application/json')
                 self.end_headers()
                 if '/test' in self.path:
-                    s.addSet(datetime.datetime.now() + datetime.timedelta(seconds=5),((0,1), (1,1), (2,1), (3,1)))
+                    self.s.addSet(datetime.datetime.now() + datetime.timedelta(seconds=5),((0,1), (1,1), (2,1), (3,1)))
                 elif 'somethingelse' in self.path:
                     parsed = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
                     sn = int(parsed['sid'][0])
