@@ -103,6 +103,7 @@ class Scheduler:
         '''
         if start > datetime.datetime.now():
             delta = start - datetime.datetime.now()
+            log.info("Adding set that starts in {0}: {1}".format(start.isoformat(' '), "".join(zones)))
             waterset = {
                 "setId": uuid1(),  # Unique ID
                 "start": start,  # Start time
@@ -236,6 +237,7 @@ class KodeFunHTTPRequestHandler(BaseHTTPRequestHandler):
 def run():
     global s
     global running
+    log.info("Application Started")
     disableShiftRegisterOutput()
     setShiftRegister(values)
     enableShiftRegisterOutput()
