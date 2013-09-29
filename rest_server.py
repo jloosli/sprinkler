@@ -10,16 +10,18 @@ import traceback
 import argparse
 import time
 import logging
+from flask import Flask
+from flask.ext.restful import Api, Resource
 
 # create file handler which logs even debug messages
 log = logging.getLogger()
 log.setLevel(logging.DEBUG)  # DEBUG | INFO | WARNING | ERROR | CRITICAL
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - Line: %(lineno)d\n%(message)s')
+formatter = logging.Formatter('[%(levelname)s] %(asctime)s - %(name)s - Line: %(lineno)d\n%(message)s')
 sh = logging.StreamHandler()
 sh.setLevel(logging.DEBUG)
 sh.setFormatter(formatter)
 log.addHandler(sh)
-fh = logging.FileHandler('spam.log')
+fh = logging.FileHandler('sprinkler.log')
 fh.setLevel(logging.DEBUG)
 fh.setFormatter(formatter)
 log.addHandler(fh)
