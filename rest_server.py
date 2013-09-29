@@ -2,6 +2,7 @@
 # -*- coding: utf8 -*-
 """
 Sprinkler REST Server
+Borrowed heavily from http://blog.miguelgrinberg.com/post/designing-a-restful-api-using-flask-restful
 """
 
 import sys
@@ -46,6 +47,13 @@ api.add_resource(UserAPI, baseUrl + 'users/<int:id>', endpoint = 'user')
 
 
 class ProgramListAPI(Resource):
+	def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument('title', type = str, required = True,
+            help = 'No program title provided', location = 'json')
+        self.reqparse.add_argument('description', type = str, default = "", location = 'json')
+        super().__init__()
+
     def get(self):
         pass
 
@@ -54,11 +62,25 @@ class ProgramListAPI(Resource):
 
 
 class ProgramAPI(Resource):
+    def __init__(self):
+    	''' Post is the only thing that receives reqparse arguments '''
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument('start', type=str, location='json')
+        self.reqparse.add_argument('zones', type=str, location ='json')
+        super().__init__()
+
     def get(self, id):
         pass
 
     def put(self, id):
-        pass
+        program = filter(lambda t: t['id'] == id, programs)
+        if len(program) == 0:
+            abort(404)
+        program = program[0]
+        args = self.reqparse.parse_args()
+        program['start'] = args.get('start', program['start'])
+        program['zones'] = args.get('zones', program['zones'])
+        return jsonify( { 'program': make_public_task(program) } )
 
     def delete(self, id):
         pass
