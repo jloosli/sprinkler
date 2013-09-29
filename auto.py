@@ -204,6 +204,7 @@ class KodeFunHTTPRequestHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 if '/test' in self.path:
                     self.s.addSet(datetime.datetime.now() + datetime.timedelta(seconds=5),((0,1), (1,1), (2,1), (3,1)))
+                    self.wfile.write(bytes("<h1>Adding test</h1>",'utf-8'))
                 elif 'somethingelse' in self.path:
                     parsed = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
                     sn = int(parsed['sid'][0])
