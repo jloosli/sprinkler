@@ -11,7 +11,8 @@ import argparse
 import time
 import logging
 from flask import Flask
-from flask.ext.restful import Api, Resource
+from flask.ext.restful import Api, Resource, reqparse
+
 
 # create file handler which logs even debug messages
 log = logging.getLogger()
@@ -25,6 +26,52 @@ fh = logging.FileHandler('sprinkler.log')
 fh.setLevel(logging.DEBUG)
 fh.setFormatter(formatter)
 log.addHandler(fh)
+
+app = Flask(__name__)
+api = Api(app)
+
+baseUrl = '/sprinkler/api/v1.0/'
+
+class UserAPI(Resource):
+    def get(self, id):
+        pass
+
+    def put(self, id):
+        pass
+
+    def delete(self, id):
+        pass
+
+api.add_resource(UserAPI, baseUrl + 'users/<int:id>', endpoint = 'user')
+
+
+class ProgramListAPI(Resource):
+    def get(self):
+        pass
+
+    def post(self):
+        pass
+
+
+class ProgramAPI(Resource):
+    def get(self, id):
+        pass
+
+    def put(self, id):
+        pass
+
+    def delete(self, id):
+        pass
+
+api.add_resource(ProgramListAPI, baseUrl + 'programs', endpoint = 'tasks')
+api.add_resource(ProgramAPI, baseUrl + 'programs/<int:id>', endpoint = 'task')
+
+
+class SystemAPI(Resource):
+	def get(self, id):
+		pass
+
+api.add_resource(SystemAPI, baseUrl + 'system', endpoint='system')
 
 
 def main():

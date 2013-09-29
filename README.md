@@ -47,4 +47,4 @@ Base: `/sprinkler/api/v1.0/`
 |     PUT     | programs/[program_id] | Update an existing program    |
 |    DELETE   | programs/[program_id] | Delete a program              |
 |     POST    | programs/now/         | Run sprinkler set immediately |
-|     GET     | programs/status/      | Get current status of zones   |
+|     GET     | system/status/        | Get current status of zones   |
