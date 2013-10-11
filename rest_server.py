@@ -12,13 +12,13 @@ import argparse
 import time
 import logging
 from flask import Flask
-from flask.ext.restful import Api, Resource, reqparse
+from flask.ext.restful import Api, Resource, reqparse, fields, marshal
 
 
 # create file handler which logs even debug messages
 log = logging.getLogger()
 log.setLevel(logging.DEBUG)  # DEBUG | INFO | WARNING | ERROR | CRITICAL
-formatter = logging.Formatter('[%(levelname)s] %(asctime)s - %(name)s - Line: %(lineno)d\n%(message)s')
+formatter = logging.Formatter('[%(levelname)s] %(asctime)s - %(name)s - Ln. %(lineno)d\n%(message)s')
 sh = logging.StreamHandler()
 sh.setLevel(logging.DEBUG)
 sh.setFormatter(formatter)
@@ -44,6 +44,10 @@ class UserAPI(Resource):
         pass
 
 api.add_resource(UserAPI, baseUrl + 'users/<int:id>', endpoint = 'user')
+
+program_fields = {
+    'start': fields.
+}
 
 
 class ProgramListAPI(Resource):
@@ -73,14 +77,14 @@ class ProgramAPI(Resource):
         pass
 
     def put(self, id):
-        program = filter(lambda t: t['id'] == id, programs)
+        program = filter(lambda p: p['id'] == id, programs)
         if len(program) == 0:
             abort(404)
         program = program[0]
         args = self.reqparse.parse_args()
         program['start'] = args.get('start', program['start'])
         program['zones'] = args.get('zones', program['zones'])
-        return jsonify( { 'program': make_public_task(program) } )
+        return { 'program': make_public_program(program) }
 
     def delete(self, id):
         pass
