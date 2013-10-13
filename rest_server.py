@@ -46,12 +46,12 @@ class UserAPI(Resource):
 api.add_resource(UserAPI, baseUrl + 'users/<int:id>', endpoint = 'user')
 
 program_fields = {
-    'start': fields.
+    'start': fields
 }
 
 
 class ProgramListAPI(Resource):
-	def __init__(self):
+    def __init__(self):
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument('title', type = str, required = True,
             help = 'No program title provided', location = 'json')
@@ -67,14 +67,14 @@ class ProgramListAPI(Resource):
 
 class ProgramAPI(Resource):
     def __init__(self):
-    	''' Post is the only thing that receives reqparse arguments '''
+        ''' Post is the only thing that receives reqparse arguments '''
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument('start', type=str, location='json')
         self.reqparse.add_argument('zones', type=str, location ='json')
         super().__init__()
 
     def get(self, id):
-        pass
+        return {'program': 'bob'}
 
     def put(self, id):
         program = filter(lambda p: p['id'] == id, programs)
@@ -105,6 +105,7 @@ def main():
     global args
     # TODO: Do something more interesting here...
     print('Hello world!')
+    app.run()
 
 if __name__ == '__main__':
     try:
