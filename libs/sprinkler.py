@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import urllib.parse
 import os
 from quick2wire.gpio import pins, Out
 import atexit
@@ -94,6 +93,21 @@ class Scheduler:
         # self.s = sched.scheduler(time.time, time.sleep)
         self.pool = []
 
+        log.info("Application Started")
+        disableShiftRegisterOutput()
+        setShiftRegister(values)
+        enableShiftRegisterOutput()
+
+        # Setup Mongo
+        self.db = MongoClient()['sprinkler']
+        settings = self.db.settings
+        programs = self.db.programs
+        sprinklerLog = self.db.log
+
+        log.debug([x for x in self.db.settings.find()])
+        log.debug([x for x in self.db.programs.find()])
+
+
     def addSet(self, start, zones):
         '''
         Add watering set
@@ -168,55 +182,27 @@ class Scheduler:
 
 
 
-def run():
-    log.info("Application Started")
-    disableShiftRegisterOutput()
-    setShiftRegister(values)
-    enableShiftRegisterOutput()
+    def run(self):
 
-    # Setup Mongo
-    db = MongoClient()['sprinkler']
-    settings = db.settings
-    programs = db.programs
-    sprinklerLog = db.log
-
-    log.debug([x for x in db.settings.find()])
-    log.debug([x for x in db.programs.find()])
-
-    nextStart = datetime.datetime.now() + datetime.timedelta(seconds=5)
-    s.addSet(nextStart, [(2, 1), (0, 1), (1, 1), (3, 1)])
-    for p in db.programs.find():
-        log.debug(p)
-        #  @todo: Allow relative start times, e.g. sunrise, sunset, now 
-        #         in addition to things like sunrise + (1,21) = an hour and 21 minutes past sunrise
-        #         Also needs to handle things like every other day, every 3 days, Mon, tues, fri, etc.
-        p['start'] = [int(x) for x in p['start']]
-        startTime = datetime.datetime.combine(datetime.date.today(), datetime.time(*p['start']))
-        log.debug("Start for program %s is at %s" % (p['_id'], startTime))
-        s.addSet(startTime, p['zones'])
-    timeToNextMidnight = datetime.datetime.combine(datetime.date.today() + datetime.timedelta(days=1), datetime.time(0)) - datetime.datetime.now()
-    log.debug("Will check again in %s" % timeToNextMidnight)
-    nextRun = threading.Timer(timeToNextMidnight.total_seconds(), run)
-    nextRun.start()
-    log.debug(nextRun)
-
-
-
-
-    #start at 7 am
-    # startTime = datetime.time(7)
-    # nextStart = datetime.datetime.now() + datetime.timedelta(seconds=5)
-    # if nextStart < datetime.datetime.now():
-    #     nextStart = nextStart + datetime.timedelta(days=1)
-
-    # print ("Next start is %s" % nextStart)
-
+        nextStart = datetime.datetime.now() + datetime.timedelta(seconds=5)
+        self.addSet(nextStart, [(2, 1), (0, 1), (1, 1), (3, 1), (4, 1)])
+        for p in self.db.programs.find():
+            log.debug(p)
+            #  @todo: Allow relative start times, e.g. sunrise, sunset, now 
+            #         in addition to things like sunrise + (1,21) = an hour and 21 minutes past sunrise
+            #         Also needs to handle things like every other day, every 3 days, Mon, tues, fri, etc.
+            p['start'] = [int(x) for x in p['start']]
+            startTime = datetime.datetime.combine(datetime.date.today(), datetime.time(*p['start']))
+            log.debug("Start for program %s is at %s" % (p['_id'], startTime))
+            self.addSet(startTime, p['zones'])
+        timeToNextMidnight = datetime.datetime.combine(datetime.date.today() + datetime.timedelta(days=1), datetime.time(0)) - datetime.datetime.now()
+        log.debug("Will check again in %s" % timeToNextMidnight)
+        nextRun = threading.Timer(timeToNextMidnight.total_seconds(), self.run)
+        nextRun.start()
+        log.debug(nextRun)
 
 
 def progexit():
-    global values
-    global running
-    running = False
     values = [0]*num_stations
     setShiftRegister(values)
     pin_sr_clk.close()
@@ -226,15 +212,10 @@ def progexit():
     log.debug("Shutting Down")
 
 
-s = Scheduler()
-running = False
 
 if __name__ == '__main__':
     atexit.register(progexit)
-    run()
+    s = Scheduler()
+    s.run()
 
-    log.debug('OpenSprinkler Pi is running...')
-    running = True
-    while running:
-        httpd.handle_request()
 
