@@ -118,6 +118,7 @@ class Scheduler:
             self.pool.append(waterset)
 
     def runSet(self, setId):
+        ''' Run a program set (called one after the other) '''
         idx, waterSet = self.getSet(setId)
         log.info(waterSet)
         # If zonePos > zones, wrap everything up
@@ -136,12 +137,14 @@ class Scheduler:
         self.pool[idx]['zonePos'] += 1
 
     def getSet(self, setId):
+        ''' Return given set '''
         for idx, waterset in enumerate(self.pool):
             if waterset['setId'] == setId:
                 return (idx, waterset)
         return False
 
     def removeSet(self, id):
+        ''' Remove set '''
         idx, waterset = self.getSet(id)
         waterset['thread'].cancel()
         if waterset['status'] != 'queued':
@@ -149,10 +152,12 @@ class Scheduler:
         del self.pool[idx]
 
     def removeAll(self):
+        ''' Remove All Sets '''
         for idx in range(len(self.pool)):
             self.removeSet(idx)
 
     def status(self):
+        ''' Return the current status of running events '''
         thePool = []
         for event in self.pool:
             if event['status'] == 'queued':
@@ -226,17 +231,6 @@ if __name__ == '__main__':
     atexit.register(progexit)
     run()
 
-    # # Setup Mongo
-    # db = MongoClient()['sprinkler']
-    # settings = db.settings
-    # programs = db.programs
-    # sprinklerLog = db.log
-
-
-        #ip and port of servr
-    #by default http server port is 8000
-    server_address = ('', 8000)
-    httpd = HTTPServer(server_address, KodeFunHTTPRequestHandler)
     log.debug('OpenSprinkler Pi is running...')
     running = True
     while running:
