@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from http.server import BaseHTTPRequestHandler, HTTPServer
 import urllib.parse
 import os
 from quick2wire.gpio import pins, Out
@@ -170,8 +169,6 @@ class Scheduler:
 
 
 def run():
-    global s
-    global running
     log.info("Application Started")
     disableShiftRegisterOutput()
     setShiftRegister(values)
@@ -190,6 +187,9 @@ def run():
     s.addSet(nextStart, [(2, 1), (0, 1), (1, 1), (3, 1)])
     for p in db.programs.find():
         log.debug(p)
+        #  @todo: Allow relative start times, e.g. sunrise, sunset, now 
+        #         in addition to things like sunrise + (1,21) = an hour and 21 minutes past sunrise
+        #         Also needs to handle things like every other day, every 3 days, Mon, tues, fri, etc.
         p['start'] = [int(x) for x in p['start']]
         startTime = datetime.datetime.combine(datetime.date.today(), datetime.time(*p['start']))
         log.debug("Start for program %s is at %s" % (p['_id'], startTime))
@@ -227,6 +227,8 @@ def progexit():
 
 
 s = Scheduler()
+running = False
+
 if __name__ == '__main__':
     atexit.register(progexit)
     run()
