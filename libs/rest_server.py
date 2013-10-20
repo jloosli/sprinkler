@@ -13,6 +13,7 @@ import time
 import logging
 from flask import Flask
 from flask.ext.restful import Api, Resource, reqparse, fields, marshal
+import sprinkler
 
 
 # create file handler which logs even debug messages
@@ -28,8 +29,6 @@ fh.setLevel(logging.DEBUG)
 fh.setFormatter(formatter)
 log.addHandler(fh)
 
-app = Flask(__name__)
-api = Api(app)
 
 baseUrl = '/sprinkler/api/v1.0/'
 
@@ -103,9 +102,12 @@ api.add_resource(SystemAPI, baseUrl + 'system', endpoint='system')
 def main():
 
     global args
-    # TODO: Do something more interesting here...
-    print('Hello world!')
-    app.run()
+    app.run(debug="True")
+
+
+app = Flask(__name__)
+api = Api(app)
+s = sprinkler.Scheduler()
 
 if __name__ == '__main__':
     try:
