@@ -29,6 +29,9 @@ fh.setLevel(logging.DEBUG)
 fh.setFormatter(formatter)
 log.addHandler(fh)
 
+app = Flask(__name__)
+api = Api(app)
+s = sprinkler.Scheduler()
 
 baseUrl = '/sprinkler/api/v1.0/'
 
@@ -105,9 +108,6 @@ def main():
     app.run(debug="True")
 
 
-app = Flask(__name__)
-api = Api(app)
-s = sprinkler.Scheduler()
 
 if __name__ == '__main__':
     try:
