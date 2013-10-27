@@ -180,6 +180,10 @@ class Scheduler:
             thePool.append(event)
         return thePool
 
+    def getPrograms(self):
+        ''' Return the current programs '''
+        return self.programs
+
 
 
     def run(self):

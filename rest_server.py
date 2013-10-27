@@ -55,13 +55,13 @@ program_fields = {
 class ProgramListAPI(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
-        self.reqparse.add_argument('title', type = str, required = True,
-            help = 'No program title provided', location = 'json')
-        self.reqparse.add_argument('description', type = str, default = "", location = 'json')
+        self.reqparse.add_argument('title', type=str, required=True,
+            help='No program title provided', location='json')
+        self.reqparse.add_argument('description', type=str, default="", location='json')
         super().__init__()
 
     def get(self):
-        pass
+        return s.getPrograms()
 
     def post(self):
         pass
