@@ -61,7 +61,8 @@ class ProgramListAPI(Resource):
         super().__init__()
 
     def get(self):
-        return s.getPrograms()
+        print(s.getPrograms())
+        return jsonify(s.getPrograms())
 
     def post(self):
         pass
