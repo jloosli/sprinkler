@@ -86,7 +86,7 @@ class ProgramListAPI(Resource):
 
     def get(self):
         print(s.getPrograms())
-        return {'programs': s.getPrograms()}
+        return jsonify(s.getPrograms())
 
     def post(self):
         pass
