@@ -62,7 +62,7 @@ class ProgramListAPI(Resource):
 
     def get(self):
         print(s.getPrograms())
-        return s.getPrograms()
+        return {}
 
     def post(self):
         pass
