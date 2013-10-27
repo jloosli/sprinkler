@@ -101,7 +101,7 @@ class Scheduler:
         # Setup Mongo
         self.db = MongoClient()['sprinkler']
         settings = self.db.settings
-        self.programs = self.db.programs.find()
+        self.programs = [x for x in self.db.programs.find()]
         sprinklerLog = self.db.log
 
         log.debug([x for x in self.db.settings.find()])
